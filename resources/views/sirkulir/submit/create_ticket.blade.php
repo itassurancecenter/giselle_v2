@@ -13,22 +13,30 @@ Submit Dokumen
                 </div>
                 <!-- /.card-header -->
                 <!-- form start -->
-                <form>
+                <form method="POST" action="{{ route('create-tiket') }}" enctype="multipart/form-data">
+                    @csrf
                     <div class="card-body">
                         <div class="form-group">
                             <label for="exampleInputEmail1">Nama Mitra</label>
-                            <input type="text" class="form-control" value="PT INFOMEDIA NUSANTARA" disabled>
+                            {{-- <input type="text" class="form-control" value="PT INFOMEDIA NUSANTARA" disabled> --}}
+                            <select class="form-control" name="partner_id" id="">
+                                <option value="" selected disabled>Pilih Nama Mitra</option>
+                                @foreach ($partner as $p)
+                                    <option value="{{ $p->id_partner }}">{{ $p->partner_name }}</option>
+                                @endforeach
+                            </select>
                         </div>
                         <div class="form-group">
                             <label for="exampleInputPassword1">Tanggal Submit</label>
-                            <input type="date" class="form-control" value="2023-07-26" disabled>
+                            <input type="text" class="form-control" name="submit_date" value="{{ date('Y-m-d', strtotime($currentDate)) }}" readonly>
+
                         </div>
                         <div class="form-group">
                             <label for="exampleInputEmail1">PIC Submit Mitra</label>
-                            <input type="text" class="form-control" placeholder="Masukkan Nama PIC Saat Submit Dokumen">
+                            <input type="text" class="form-control" name="pic_drop" placeholder="Masukkan Nama PIC Saat Submit Dokumen">
                         </div>
                         <div class="form-group">
-                            <label for="password-vertical">Evidence Ambil</label>
+                            <label for="password-vertical">Evidence Submit</label>
                             <div id="my_camera"></div>
                             <br>
                             <div id="results">Foto Evidence Akan Muncul Disini...</div>
@@ -45,7 +53,6 @@ Submit Dokumen
                 </form>
             </div>
         </div>
-
     </div>
     <!-- /.row -->
 </div><!-- /.container-fluid -->
@@ -66,6 +73,5 @@ Submit Dokumen
             document.getElementById('results').innerHTML = '<img src="' + data_uri + '"/>';
         });
     }
-
 </script>
 @endsection

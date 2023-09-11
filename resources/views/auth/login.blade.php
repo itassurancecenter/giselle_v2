@@ -24,28 +24,29 @@
             <div class="card-header" style="background-color: #b30000; color: white;">
                 <h3 class="card-title m-0 center"><strong>GISELLE</strong></h3>
             </div>
-            <div class="card-body">
-
-                <form action="{{ asset('/') }}index3.html" method="post">
+            <form action="#" method="post" enctype="multipart/form-data">
+                @csrf
+                <div class="card-body">
                     <div class="form-group mb-3">
-                        <label for=""><strong>Email</strong></label>
-                        <input type="email" class="form-control" placeholder="Email">
+                        <label for=""><strong>Username</strong></label>
+                        <input type="text" class="form-control" placeholder="Username" name="username">
                     </div>
                     <div class="form-group mb-3">
                         <label for=""><strong>Password</strong></label>
-                        <input type="password" class="form-control" placeholder="Password">
+                        <input type="password" class="form-control" placeholder="Password" name="password">
                     </div>
-                </form>
-            </div>
-            <div class="card-footer">
-                <div class="row">
-                    <div class="col-4">
-                        <a href="{{ url('/beranda') }}" type="submit" class="btn btn-danger btn-block"
-                            style="background-color: #b30000"><strong>Masuk</strong></a>
-                    </div>
-                    <!-- /.col -->
+
                 </div>
-            </div>
+                <div class="card-footer">
+                    <div class="row">
+                        <div class="col-4">
+                            <a href="{{ route('beranda') }}" type="submit" class="btn btn-danger btn-block"
+                                style="background-color: #b30000"><strong>Masuk</strong></a>
+                        </div>
+                        <!-- /.col -->
+                    </div>
+                </div>
+            </form>
             <!-- /.card -->
         </div>
         <!-- /.login-box -->

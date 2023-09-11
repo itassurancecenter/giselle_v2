@@ -12,7 +12,7 @@
       </li>
       <li class="nav-header"><strong>DOKUMEN SIRKULIR</strong></li>
       <li class="nav-item">
-        <a href="{{ url('/create-ticket') }}" class="nav-link">
+        <a href="{{ url('/buat-tiket') }}" class="nav-link">
             <i class="nav-icon fas fa-edit"></i>
             <p>
             Submit Dokumen
@@ -58,6 +58,23 @@
             <i class="nav-icon fas fa-print"></i>
             <p>
             Permintaan Diproses
+            </p>
+        </a>
+      </li>
+      <li class="nav-header"><strong>MASTER DATA</strong></li>
+      <li class="nav-item">
+        <a href="{{ route('master-dataMitra') }}" class="nav-link">
+            <i class="nav-icon fas fa-database"></i>
+            <p>
+            Data Mitra
+            </p>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="{{ route('master-dataUser') }}" class="nav-link">
+            <i class="nav-icon fas fa-database"></i>
+            <p>
+            Data User
             </p>
         </a>
       </li>
