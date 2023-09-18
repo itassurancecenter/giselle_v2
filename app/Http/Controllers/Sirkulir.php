@@ -35,7 +35,7 @@ class Sirkulir extends Controller
      }
 
     public function addDocumentView($id_ticket){
-// dd($ticket_id);
+
         $ticket = Ticket::findOrFail($id_ticket);
         // dd($ticket);
 
