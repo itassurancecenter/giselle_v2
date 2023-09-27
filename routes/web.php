@@ -42,6 +42,7 @@ Route::controller(Sirkulir::class)->group(function(){
     Route::get('/buat-tiket', 'createTicketView');
     Route::post('/store-tiket', 'createTicket')->name('create-tiket');
     Route::get('/tambah-dokumen/{id_ticket}', 'addDocumentView');
+    Route::get('/store-dokumen/{id_ticket}', 'addDocument')->name('store-dokumen');
 });
 
 Route::controller(Master::class)->group(function(){

@@ -1,4 +1,5 @@
 <div>
+    <input wire:model="search" type="text" placeholder="Search...">
     <table class="table table-bordered table-striped">
         <thead>
         <tr>

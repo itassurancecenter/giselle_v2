@@ -11,8 +11,7 @@ class MasterMitra extends Component
 {
     use WithPagination;
     protected $paginationTheme = 'bootstrap';
-    public $search;
-    protected $queryString = ['search'];
+    public $search = '';
     public $limitPerPage = '10';
 
     public function render()

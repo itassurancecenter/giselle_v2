@@ -11,4 +11,12 @@ class Contract extends Model
 
     protected $connection = 'mysql2';
     protected $table = 'm_kl';
+    protected $primaryKey = 'NO_KL';
+    public $incrementing = 'false';
+    protected $keyType = 'string';
+
+
+    public function dokumen(){
+        return $this->hasOne(Document::class, 'DocumentDescParent', 'NO_KL');
+    }
 }

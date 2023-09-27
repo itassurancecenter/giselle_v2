@@ -11,4 +11,14 @@ class Document extends Model
     protected $table = 'document';
     protected $primaryKey = 'DocumentID';
     public $incrementing = 'false';
+    protected $keyType = 'string';
+
+    public function jenis_dokumen(){
+        return $this->hasOne(JenisDokumen::class, 'KodeDokumen', 'DocumentType');
+    }
+
+    public function sign(){
+        return $this->hasOne(Sign::class, 'sign_id', 'SignBy');
+    }
+
 }
