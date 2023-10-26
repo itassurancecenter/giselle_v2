@@ -20,7 +20,7 @@
         </a>
       </li>
       <li class="nav-item">
-        <a href="{{ url('/') }}" class="nav-link">
+        <a href="{{ url('/list-sirkulir') }}" class="nav-link">
             <i class="nav-icon fas fa-list-alt"></i>
             <p>
             List Dokumen Sirkulir

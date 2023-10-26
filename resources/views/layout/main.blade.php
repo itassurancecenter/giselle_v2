@@ -3,6 +3,7 @@
 <html lang="en">
 
 <head>
+
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>GISELLE</title>
@@ -53,6 +54,8 @@
 </head>
 
 <body class="hold-transition sidebar-mini sidebar-collapse">
+
+    @include('sweetalert::alert')
     <!-- Site wrapper -->
     <div class="wrapper">
         <!-- Navbar -->
@@ -121,7 +124,7 @@
                             alt="User Image">
                     </div>
                     <div class="info">
-                        <a href="#" class="d-block"><strong>M Ilham Syafrizal</strong></a>
+                        <a href="#" class="d-block"><strong>{{Auth::user()->name}}</strong></a>
                         <a href="#">
                             <span class="right badge badge-danger">Logout</span>
                         </a>

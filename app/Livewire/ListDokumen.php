@@ -5,6 +5,7 @@ namespace App\Livewire;
 use Livewire\Component;
 use App\Models\Ticket;
 use App\Models\Document;
+use App\Models\LogDocument;
 use Livewire\WithPagination;
 
 class ListDokumen extends Component

@@ -26,7 +26,8 @@
             </div>
             <div class="card-body">
 
-                <form action="{{ asset('/') }}index3.html" method="post">
+                <form action="{{ route('login.doLogin') }}" method="post">
+                    @csrf
                     <div class="form-group mb-3">
                         <label for=""><strong>Email</strong></label>
                         <input type="email" class="form-control" placeholder="Email">
@@ -35,16 +36,17 @@
                         <label for=""><strong>Password</strong></label>
                         <input type="password" class="form-control" placeholder="Password">
                     </div>
-                </form>
+
             </div>
             <div class="card-footer">
                 <div class="row">
                     <div class="col-4">
-                        <a href="{{ url('/beranda') }}" type="submit" class="btn btn-danger btn-block"
-                            style="background-color: #b30000"><strong>Masuk</strong></a>
+                        <button type="submit" class="btn btn-danger btn-block"
+                            style="background-color: #b30000"><strong>Masuk</strong></button>
                     </div>
                     <!-- /.col -->
                 </div>
+                </form>
             </div>
             <!-- /.card -->
         </div>

@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
-
+use Illuminate\Support\Str;
 
 class Credentials extends Controller
 {
@@ -16,7 +16,7 @@ class Credentials extends Controller
 
     public function doLogin(Request $request)
     {
-
+// dd($request);
         $request->validate([
             'username' => 'required',
             'password' => 'required'
@@ -24,11 +24,8 @@ class Credentials extends Controller
 
         $credentials = [
             'username' => $request->input('username'),
-            'password' => md5($request->input('password'))
+            'password' => $request->input('password')
         ];
-
-        $data_pevita = User::where('username', $request->username)->first();
-        // dd($credentials);
 
         if(Auth::attempt($credentials)){
             $request->session()->regenerate();
@@ -36,7 +33,7 @@ class Credentials extends Controller
         };
 
         return back()->withErrors([
-            'username' => 'username yang anda masukkan salah'
-        ])->onlyInput('username');
+            'username' => 'Username atau Password Salah',
+        ]);
     }
 }

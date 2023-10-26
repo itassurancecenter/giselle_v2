@@ -16,4 +16,8 @@ class Ticket extends Model
     public function partner(){
         return $this->hasOne(Partner::class, 'id_partner', 'PartnerID');
     }
+
+    public function document(){
+        return $this->hasMany(Document::class, 'TicketID', 'TicketID');
+    }
 }

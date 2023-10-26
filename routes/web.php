@@ -28,28 +28,36 @@ Route::get('/', function () {
 });
 
 Route::controller(Credentials::class)->group(function(){
-    Route::get('/', 'loginView');
+    Route::get('/', 'loginView')->name('login-view');
     Route::post('/doLogin', 'doLogin')->name('login.doLogin');
 });
 
-Auth::routes();
+Route::middleware(['auth'])->group(function(){
+    Auth::routes();
 
-Route::controller(Layout::class)->group(function(){
-    Route::get('/beranda', 'index')->name('beranda');
+    Route::controller(Layout::class)->group(function(){
+        Route::get('/beranda', 'index')->name('beranda');
+    });
+
+    Route::controller(Sirkulir::class)->group(function(){
+        Route::get('/buat-tiket', 'createTicketView');
+        Route::post('/store-tiket', 'createTicket')->name('create-tiket');
+        Route::get('/tambah-dokumen/{id_ticket}', 'addDocumentView')->name('tambah-dokumen');
+        Route::get('/store-dokumen/{id_ticket}', 'addDocument')->name('store-dokumen');
+        Route::get('/list-sirkulir', 'listSirkulir')->name('list.sirkulir');
+        Route::get('/detail-tiket/{id_ticket}', 'detailTicket')->name('detail-tiket');
+        Route::get('/update-status/{document_id}', 'updateStatus')->name('update-status');
+    });
+
+    Route::controller(Master::class)->group(function(){
+        Route::get('data-mitra', 'dataMitra')->name('master-dataMitra');
+        Route::get('data-user', 'dataUser')->name('master-dataUser');
+
+    });
+
+
+
+    Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
 });
 
-Route::controller(Sirkulir::class)->group(function(){
-    Route::get('/buat-tiket', 'createTicketView');
-    Route::post('/store-tiket', 'createTicket')->name('create-tiket');
-    Route::get('/tambah-dokumen/{id_ticket}', 'addDocumentView');
-    Route::get('/store-dokumen/{id_ticket}', 'addDocument')->name('store-dokumen');
-});
-
-Route::controller(Master::class)->group(function(){
-    Route::get('data-mitra', 'dataMitra')->name('master-dataMitra');
-    Route::get('data-user', 'dataUser')->name('master-dataUser');
-});
-
-
-
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

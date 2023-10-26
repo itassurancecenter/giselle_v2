@@ -9,9 +9,6 @@ class Document extends Model
 {
     use HasFactory;
     protected $table = 'document';
-    protected $primaryKey = 'DocumentID';
-    public $incrementing = 'false';
-    protected $keyType = 'string';
 
     public function jenis_dokumen(){
         return $this->hasOne(JenisDokumen::class, 'KodeDokumen', 'DocumentType');
@@ -21,4 +18,15 @@ class Document extends Model
         return $this->hasOne(Sign::class, 'sign_id', 'SignBy');
     }
 
+    public function status(){
+        return $this->hasOne(Status::class, 'id_status', 'DocumentStatus');
+    }
+
+    public function ticket(){
+        return $this->belongsTo(Ticket::class, 'TicketID', 'TicketID');
+    }
+
+    public function log(){
+        return $this->hasMany(LogDocument::class, 'DocumentID', 'DocumentID');
+    }
 }

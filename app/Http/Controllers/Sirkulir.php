@@ -11,12 +11,16 @@ use App\Models\Penagihan;
 use App\Models\User;
 use App\Models\Contract;
 use App\Models\Sign;
+use App\Models\LogDocument;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
+use Alert;
 // Import ID generator for Prefix
 use sirajcse\UniqueIdGenerator\UniqueIdGenerator;
 use Carbon\Carbon;
 use DateTime;
 use DateTimeZone;
+use Illuminate\Console\View\Components\Alert as ComponentsAlert;
+use Illuminate\Support\Facades\Auth;
 
 class Sirkulir extends Controller
 {
@@ -44,6 +48,22 @@ class Sirkulir extends Controller
      }
 
     public function addDocumentView($id_ticket){
+
+        $data = Document::get('DocumentDescParent');
+        $ticket = Ticket::findOrFail($id_ticket);
+        $jenis_dokumen = JenisDokumen::all();
+        $user = User::where('partner_id', $ticket->PartnerID)->first();
+        // dd($user);
+        $penagihan = Penagihan::where('CREATE_BY', $user->id)->whereIn('status', ['40', '50'])->whereNotIn('NO_PENAGIHAN', $data)->get();
+        // dd($penagihan);
+        $kl = Contract::where('PARTNER_ID', $ticket->PartnerID)->whereNotIn('NO_KL', $data)->get();
+        $sign = Sign::get();
+
+        return view('sirkulir.submit.add_doc', compact('id_ticket', 'ticket', 'jenis_dokumen',
+         'penagihan', 'kl', 'sign'));
+    }
+
+    public function detailTicket($id_ticket){
 
         $data = Document::get('DocumentDescParent');
         $ticket = Ticket::findOrFail($id_ticket);
@@ -94,7 +114,7 @@ class Sirkulir extends Controller
             $document->SignBy = $penagihan->sign_by;
         }
 
-        $document->DocumentStatus = "10";
+        $document->DocumentStatus = "0";
         $document->PicDrop = $ticket->PicDrop;
         $document->SubmitDate = $ticket->SubmitDate;
         $document->LastUpdateDate = $ticket->SubmitDate;
@@ -121,6 +141,49 @@ class Sirkulir extends Controller
         // dd($document);
         $document->save();
 
+        $log = new LogDocument();
+        $log->DocumentID = $document_id;
+        $log->LogDesc = 'Dokumen Telah Disubmit Mitra';
+        $log->UpdatedBy = Auth::user()->id;
+        $log->save();
+
+        Alert::success('Berhasil!', 'Dokumen Telah Berhasil Disubmit');
         return redirect()->back();
+    }
+
+    public function updateStatus($document_id)
+    {
+        $document = Document::findOrFail($document_id);
+        $status = $document->DocumentStatus;
+        // dd($status);
+
+        if($document->SignBy == '10'){
+            $maxValue = '7';
+            $specialValue = '1';
+
+            if($status == $specialValue){
+                $document->DocumentStatus = $status + 2;
+            }elseif($status == $maxValue){
+                $document->DocumentStatus = $status + 0;
+            }else{
+                $document->DocumentStatus = $status + 1;
+            }
+        }elseif($document->SignBy == '20'){
+            $maxValue = '2';
+
+            if($status == $maxValue){
+                $document->DocumentStatus = $status + 0;
+            }else{
+                $document->DocumentStatus = $status + 1;
+            }
+        }
+        $document->save();
+// dd($document->DocumentStatus);
+       Alert::success('Berhasil!', 'Status Dokumen Berhasil Diupdate');
+        return redirect()->back();
+    }
+
+    public function listSirkulir(){
+        return view('sirkulir.list_ticket');
     }
 }

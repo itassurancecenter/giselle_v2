@@ -24,7 +24,7 @@
             <div class="card-header" style="background-color: #b30000; color: white;">
                 <h3 class="card-title m-0 center"><strong>GISELLE</strong></h3>
             </div>
-            <form action="#" method="post" enctype="multipart/form-data">
+            <form action="{{ route('login.doLogin') }}" method="post" enctype="multipart/form-data">
                 @csrf
                 <div class="card-body">
                     <div class="form-group mb-3">
@@ -40,8 +40,8 @@
                 <div class="card-footer">
                     <div class="row">
                         <div class="col-4">
-                            <a href="{{ route('beranda') }}" type="submit" class="btn btn-danger btn-block"
-                                style="background-color: #b30000"><strong>Masuk</strong></a>
+                            <button type="submit" class="btn btn-danger btn-block"
+                                style="background-color: #b30000"><strong>Masuk</strong></button>
                         </div>
                         <!-- /.col -->
                     </div>

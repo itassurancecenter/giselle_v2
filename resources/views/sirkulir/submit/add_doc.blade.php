@@ -1,6 +1,10 @@
 @extends('layout.main')
 @section('judul')
+@if(Route::current()->getName() == 'tambah-dokumen')
 Tambah Dokumen
+@elseif(Route::current()->getName() == 'detail-tiket')
+Detail Tiket {{ $ticket->TicketID }}
+@endif
 @endsection
 
 @section('content')
@@ -9,7 +13,7 @@ Tambah Dokumen
         <div class="col-md-12">
             <div class="card card-primary">
                 <div class="card-header" style="background-color: #b30000">
-                    <h3 class="card-title">Tambah Dokumen</h3>
+                    <h3 class="card-title">Detail Tiket</h3>
                 </div>
                 <!-- /.card-header -->
                 <div class="card-body">
@@ -41,9 +45,11 @@ Tambah Dokumen
                     <div class="row">
                         <div class="col-12">
                             <div class="float-right">
+                                @if(Route::current()->getName() == 'tambah-dokumen')
                                 <button type="button" class="btn btn-info" data-toggle="modal" data-target="#modal-doc">
                                     <i class="nav-icon fas fa-plus-circle"></i> Tambah Dokumen
                                 </button>
+                                @endif
                             </div>
                             <div class="modal fade" id="modal-doc">
                                 <div class="modal-dialog modal-lg">
@@ -172,7 +178,6 @@ Tambah Dokumen
                                                         </select>
                                                     </div>
                                                 </div>
-
                                             </div>
                                             <div class="modal-footer justify-content-between">
                                                 <button type="button" class="btn btn-default"

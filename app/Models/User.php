@@ -12,9 +12,8 @@ class User extends Model
 {
     use HasApiTokens, HasFactory, Notifiable;
 
-    protected $connection = 'mysql2';
-    protected $table = 'user_data';
-    protected $primaryKey = 'iduser';
+    protected $table = 'users';
+    protected $primaryKey = 'id';
     public $incrementing = 'false';
 
     public function partner(){
