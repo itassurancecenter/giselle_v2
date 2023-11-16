@@ -30,7 +30,7 @@
                     @csrf
                     <div class="form-group mb-3">
                         <label for=""><strong>Email</strong></label>
-                        <input type="email" class="form-control" placeholder="Email">
+                        <input type="text" class="form-control" placeholder="Email">
                     </div>
                     <div class="form-group mb-3">
                         <label for=""><strong>Password</strong></label>

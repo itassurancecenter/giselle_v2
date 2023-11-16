@@ -27,6 +27,10 @@ class Document extends Model
     }
 
     public function log(){
-        return $this->hasMany(LogDocument::class, 'DocumentID', 'DocumentID');
+        return $this->hasMany(LogDocument::class, 'DocumentID', 'DocumentID')->orderBy('id', 'desc');
+    }
+
+    public function file(){
+        return $this->hasOne(File::class, 'DocumentID', 'DocumentID');
     }
 }

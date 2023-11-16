@@ -36,4 +36,12 @@ class Credentials extends Controller
             'username' => 'Username atau Password Salah',
         ]);
     }
+
+    public function doLogout(Request $request)
+    {
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        return redirect('/');
+    }
 }

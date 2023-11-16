@@ -30,6 +30,7 @@ Route::get('/', function () {
 Route::controller(Credentials::class)->group(function(){
     Route::get('/', 'loginView')->name('login-view');
     Route::post('/doLogin', 'doLogin')->name('login.doLogin');
+    Route::get('/doLogout', 'doLogout')->name('auth.logout');
 });
 
 Route::middleware(['auth'])->group(function(){
@@ -43,10 +44,16 @@ Route::middleware(['auth'])->group(function(){
         Route::get('/buat-tiket', 'createTicketView');
         Route::post('/store-tiket', 'createTicket')->name('create-tiket');
         Route::get('/tambah-dokumen/{id_ticket}', 'addDocumentView')->name('tambah-dokumen');
-        Route::get('/store-dokumen/{id_ticket}', 'addDocument')->name('store-dokumen');
         Route::get('/list-sirkulir', 'listSirkulir')->name('list.sirkulir');
+        Route::get('/list-done-signed', 'listSirkulir')->name('list-done-signed');
+        Route::get('/list-done', 'listSirkulir')->name('list-done');
         Route::get('/detail-tiket/{id_ticket}', 'detailTicket')->name('detail-tiket');
         Route::get('/update-status/{document_id}', 'updateStatus')->name('update-status');
+        Route::post('/store-dokumen/{id_ticket}', 'addDocument')->name('store-dokumen');
+        Route::post('/bulk-update-status', 'bulkUpdateStatus')->name('bulk-update-status');
+        Route::post('dokumen/upload-file/{document_id}', 'uploadFile')->name('dokumen.uploadFile');
+        Route::post('dokumen/terima-dokumen/{document_id}', 'acceptFile')->name('dokumen.terima');
+        Route::post('dokumen/tolak-dokumen/{document_id}', 'rejectFile')->name('dokumen.tolak');
     });
 
     Route::controller(Master::class)->group(function(){

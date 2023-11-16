@@ -11,17 +11,12 @@ class MasterMitra extends Component
 {
     use WithPagination;
     protected $paginationTheme = 'bootstrap';
-    public $search = '';
     public $limitPerPage = '10';
+    public $search = '';
 
     public function render()
     {
-        $data_mitra = Partner::orderBy('id_partner', 'asc')->paginate($this->limitPerPage);
-
-        if($this->search !== NULL){
-            $data_mitra = Partner::where('partner_name','like', '%' . $this->search . '%')->paginate($this->limitPerPage);
-        }
-        // $this->emit('postStore');
+        $data_mitra = Partner::where('partner_name', 'LIKE', '%'.$this->search.'%')->orderBy('id_partner', 'asc')->paginate($this->limitPerPage);
 
         return view('livewire.master-mitra', compact('data_mitra'));
     }

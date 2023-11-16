@@ -46,14 +46,14 @@ Detail Tiket {{ $ticket->TicketID }}
                         <div class="col-12">
                             <div class="float-right">
                                 @if(Route::current()->getName() == 'tambah-dokumen')
-                                <button type="button" class="btn btn-info" data-toggle="modal" data-target="#modal-doc">
+                                <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#modal-doc">
                                     <i class="nav-icon fas fa-plus-circle"></i> Tambah Dokumen
                                 </button>
                                 @endif
                             </div>
                             <div class="modal fade" id="modal-doc">
                                 <div class="modal-dialog modal-lg">
-                                    <form action="{{ route('store-dokumen', $id_ticket) }}" action="GET" enctype="multipart/form-data">
+                                    <form action="{{ route('store-dokumen', $id_ticket) }}" action="POST" enctype="multipart/form-data">
                                         @csrf
                                         <div class="modal-content">
                                             <div class="modal-header">
@@ -114,12 +114,14 @@ Detail Tiket {{ $ticket->TicketID }}
                                                     <div class="form-group">
                                                         <label for="">Nomor KL</label>
                                                         <select class="form-control select2bs4" style="width: 100%;"
-                                                            name="document_parent_bak_bapl">
-                                                            <option >Pilih Nomor KL</option>
+                                                            name="document_parent_bak_bapl" id="kl-select">
+                                                            <option value="selected">Pilih Nomor KL</option>
                                                             @foreach ($kl as $kl)
                                                             <option value="{{ $kl->NO_KL }}">{{ $kl->NO_KL }} </option>
                                                             @endforeach
                                                         </select>
+                                                        <small style="color: red">Isikan kolom berikut jika tidak terdapat nomor KL dipilihan</small>
+                                                        <input class="form-control" type="text" name="document_parent_bak_bapl" id="kl-text" placeholder="Masukan Nomor KL disini dengan lengkap">
                                                     </div>
                                                     <div class="form-group">
                                                         <label for="">Status SID</label>
@@ -201,32 +203,29 @@ Detail Tiket {{ $ticket->TicketID }}
 </div><!-- /.container-fluid -->
 @livewireScripts()
 <script>
-    $(document).ready(function () {
-        $("#document_type").on("change", function () {
-            // Ambil nilai yang dipilih dalam selectField
-            var selectedValue = $(this).val();
+   $(document).ready(function () {
+        $("#kl-select").change(function () {
 
-            // Periksa nilai yang dipilih dan tampilkan/sembunyikan hidden form
-            if (selectedValue === "BAPL") {
-                $("#showBapl").show(); // Tampilkan hidden form jika BAPL dipilih
+            var selectedOption = $(this).val();
+
+            if (selectedOption !== "selected") {
+                $("#kl-text").prop("disabled", true).val('');
             } else {
-                $("#showBapl").hide(); // Sembunyikan hidden form jika opsi 2 dipilih atau lainnya
+                $("#kl-text").prop("disabled", false);
             }
         });
     });
-
 </script>
 <script>
     $(document).ready(function () {
         $("#document_type").on("change", function () {
-            // Ambil nilai yang dipilih dalam selectField
             var selectedValue = $(this).val();
 
-            // Periksa nilai yang dipilih dan tampilkan/sembunyikan hidden form
+
             if (selectedValue === "BAK-BAPL") {
-                $("#showBakBapl").show(); // Tampilkan hidden form jika BAK BAPLA dipilih
+                $("#showBakBapl").show();
             } else {
-                $("#showBakBapl").hide(); // Sembunyikan hidden form jika opsi 2 dipilih atau lainnya
+                $("#showBakBapl").hide();
             }
         });
     });
@@ -235,14 +234,14 @@ Detail Tiket {{ $ticket->TicketID }}
 <script>
     $(document).ready(function () {
         $("#document_type").on("change", function () {
-            // Ambil nilai yang dipilih dalam selectField
+
             var selectedValue = $(this).val();
 
-            // Periksa nilai yang dipilih dan tampilkan/sembunyikan hidden form
+
             if (selectedValue === "BAK-BAPLA") {
-                $("#showBakBapla").show(); // Tampilkan hidden form jika BAK BAPLA dipilih
+                $("#showBakBapla").show();
             } else {
-                $("#showBakBapla").hide(); // Sembunyikan hidden form jika opsi 2 dipilih atau lainnya
+                $("#showBakBapla").hide();
             }
         });
     });
@@ -251,14 +250,14 @@ Detail Tiket {{ $ticket->TicketID }}
 <script>
     $(document).ready(function () {
         $("#document_type").on("change", function () {
-            // Ambil nilai yang dipilih dalam selectField
+
             var selectedValue = $(this).val();
 
-            // Periksa nilai yang dipilih dan tampilkan/sembunyikan hidden form
+
             if (selectedValue === "BAPLA") {
-                $("#showBapla").show(); // Tampilkan hidden form jika BAK BAPLA dipilih
+                $("#showBapla").show();
             } else {
-                $("#showBapla").hide(); // Sembunyikan hidden form jika opsi 2 dipilih atau lainnya
+                $("#showBapla").hide();
             }
         });
     });
@@ -267,14 +266,14 @@ Detail Tiket {{ $ticket->TicketID }}
 <script>
     $(document).ready(function () {
         $("#document_type").on("change", function () {
-            // Ambil nilai yang dipilih dalam selectField
+
             var selectedValue = $(this).val();
 
-            // Periksa nilai yang dipilih dan tampilkan/sembunyikan hidden form
+
             if (selectedValue === "BA-REKON") {
-                $("#showBaRekon").show(); // Tampilkan hidden form jika BAK BAPLA dipilih
+                $("#showBaRekon").show();
             } else {
-                $("#showBaRekon").hide(); // Sembunyikan hidden form jika opsi 2 dipilih atau lainnya
+                $("#showBaRekon").hide();
             }
         });
     });

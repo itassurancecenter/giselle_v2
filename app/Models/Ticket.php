@@ -20,4 +20,16 @@ class Ticket extends Model
     public function document(){
         return $this->hasMany(Document::class, 'TicketID', 'TicketID');
     }
+
+    public function documentDone(){
+        return $this->hasMany(Document::class, 'TicketID', 'TicketID')->where('DocumentStatus', '9');
+    }
+
+    public function doneSigned(){
+        return $this->hasMany(Document::class, 'TicketID', 'TicketID')->whereIn('DocumentStatus', ['2', '7']);
+    }
+
+    public function sirkulir(){
+        return $this->hasMany(Document::class, 'TicketID', 'TicketID')->whereNotIn('DocumentStatus', ['2', '7', '9']);
+    }
 }

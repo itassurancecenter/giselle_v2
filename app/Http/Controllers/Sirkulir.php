@@ -12,8 +12,11 @@ use App\Models\User;
 use App\Models\Contract;
 use App\Models\Sign;
 use App\Models\LogDocument;
+use App\Models\File;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
 use Alert;
+use Illuminate\Support\Facades\Route;
+use Storage;
 // Import ID generator for Prefix
 use sirajcse\UniqueIdGenerator\UniqueIdGenerator;
 use Carbon\Carbon;
@@ -27,7 +30,6 @@ class Sirkulir extends Controller
     //
     public function createTicketView(){
         $currentDate = Carbon::now();
-        // dd($currentDate);
         $partner = Partner::orderBy('partner_name', 'asc')->get();
 
         return view ('sirkulir.submit.create_ticket', compact('partner', 'currentDate'));
@@ -41,7 +43,6 @@ class Sirkulir extends Controller
         $ticket->PartnerID = $request->partner_id;
         $ticket->SubmitDate = $request->submit_date;
         $ticket->PicDrop = $request->pic_drop;
-        // dd($ticket);
         $ticket->save();
 
         return redirect()->action([Sirkulir::class, 'addDocumentView'], ['id_ticket' => $ticket_id]);
@@ -53,9 +54,7 @@ class Sirkulir extends Controller
         $ticket = Ticket::findOrFail($id_ticket);
         $jenis_dokumen = JenisDokumen::all();
         $user = User::where('partner_id', $ticket->PartnerID)->first();
-        // dd($user);
         $penagihan = Penagihan::where('CREATE_BY', $user->id)->whereIn('status', ['40', '50'])->whereNotIn('NO_PENAGIHAN', $data)->get();
-        // dd($penagihan);
         $kl = Contract::where('PARTNER_ID', $ticket->PartnerID)->whereNotIn('NO_KL', $data)->get();
         $sign = Sign::get();
 
@@ -70,7 +69,6 @@ class Sirkulir extends Controller
         $jenis_dokumen = JenisDokumen::all();
         $user = User::where('partner_id', $ticket->PartnerID)->first();
         $penagihan = Penagihan::where('CREATE_BY', $user->iduser)->whereIn('status', ['40', '50'])->whereNotIn('NO_PENAGIHAN', $data)->get();
-        // dd($penagihan);
         $kl = Contract::where('PARTNER_ID', $ticket->PartnerID)->whereNotIn('NO_KL', $data)->get();
         $sign = Sign::get();
 
@@ -82,13 +80,11 @@ class Sirkulir extends Controller
 
         $ticket = Ticket::findOrFail($id_ticket);
         $penagihan = Penagihan::where('NO_PENAGIHAN',$request->document_parent_bapl)->first();
-// dd($request);
         $timezone = 'Asia/Jakarta';
         $tanggal = Carbon::now($timezone);
         $tahun = $tanggal->year;
         $waktu = $tanggal->day.$tanggal->month;
         $jam = $tanggal->hour.$tanggal->minute.$tanggal->second;
-        // dd($waktu);
 
         $document = new Document();
         $prefix = $request->document_type.'/';
@@ -98,7 +94,7 @@ class Sirkulir extends Controller
         }else{
             $document_id = UniqueIdGenerator::generate(['table' => 'document', 'field' => 'DocumentID','length' => 28, 'prefix' => $prefix, 'suffix' => $suffix, 'reset_on_change' => 'suffix']);
         }
-        // dd($document_id);
+
         $document->DocumentID = $document_id;
         $document->TicketID = $ticket->TicketID;
         $document->PartnerID = $ticket->PartnerID;
@@ -138,13 +134,13 @@ class Sirkulir extends Controller
         if($request->document_type == 'BAPL'){
             $document->DocumentDescChild = $penagihan->NO_KL.' - '.$penagihan->PERIODE_DESC;
         }
-        // dd($document);
         $document->save();
 
         $log = new LogDocument();
         $log->DocumentID = $document_id;
         $log->LogDesc = 'Dokumen Telah Disubmit Mitra';
-        $log->UpdatedBy = Auth::user()->id;
+        $log->status = 'Submitted';
+        $log->UpdatedBy = Auth::user()->name;
         $log->save();
 
         Alert::success('Berhasil!', 'Dokumen Telah Berhasil Disubmit');
@@ -155,15 +151,14 @@ class Sirkulir extends Controller
     {
         $document = Document::findOrFail($document_id);
         $status = $document->DocumentStatus;
-        // dd($status);
-
+        $max = '9';
         if($document->SignBy == '10'){
             $maxValue = '7';
             $specialValue = '1';
 
             if($status == $specialValue){
                 $document->DocumentStatus = $status + 2;
-            }elseif($status == $maxValue){
+            }elseif($status == $maxValue || $status == $max){
                 $document->DocumentStatus = $status + 0;
             }else{
                 $document->DocumentStatus = $status + 1;
@@ -171,19 +166,155 @@ class Sirkulir extends Controller
         }elseif($document->SignBy == '20'){
             $maxValue = '2';
 
-            if($status == $maxValue){
+            if($status == $maxValue || $status == $max){
                 $document->DocumentStatus = $status + 0;
             }else{
                 $document->DocumentStatus = $status + 1;
             }
         }
         $document->save();
-// dd($document->DocumentStatus);
-       Alert::success('Berhasil!', 'Status Dokumen Berhasil Diupdate');
+
+        $log = new LogDocument();
+        $log->DocumentID = $document->DocumentID;
+        $log->LogDesc = 'Dokumen Telah Diupdate '. $document->status->status;
+        $log->status = $document->status->status;
+        $log->UpdatedBy = Auth::user()->name;
+        $log->save();
+
+        Alert::success('Berhasil!', 'Status Dokumen Berhasil Diupdate');
+        return redirect()->back();
+    }
+
+    public function bulkUpdateStatus(Request $request){
+        $selected_document = $request->input('selected_document', []);
+        $jml = sizeof($selected_document);
+
+        foreach($selected_document as $id){
+            $document = Document::find($id);
+            $status = $document->DocumentStatus;
+            $max = '9';
+            if($document->SignBy == '10'){
+                $maxValue = '7';
+                $specialValue = '1';
+
+                if($status == $specialValue){
+                    $document->DocumentStatus = $status + 2;
+                }elseif($status == $maxValue || $status == $max){
+                    $document->DocumentStatus = $status + 0;
+                }else{
+                    $document->DocumentStatus = $status + 1;
+                }
+            }elseif($document->SignBy == '20'){
+                $maxValue = '2';
+
+                if($status == $maxValue || $status == $max){
+                    $document->DocumentStatus = $status + 0;
+                }else{
+                    $document->DocumentStatus = $status + 1;
+                }
+            }
+            $document->save();
+
+            $log = new LogDocument();
+            $log->DocumentID = $document->DocumentID;
+            $log->LogDesc = 'Dokumen Telah Diupdate '. $document->status->status;
+            $log->status = $document->status->status;
+            $log->UpdatedBy = Auth::user()->name;
+            $log->save();
+        }
+
+        Alert::success('Berhasil!', $jml.' Status Dokumen Berhasil Diupdate');
         return redirect()->back();
     }
 
     public function listSirkulir(){
-        return view('sirkulir.list_ticket');
+
+        $currentRoute = Route::currentRouteName();
+        // dd($currentRoute);
+        if($currentRoute == 'list.sirkulir'){
+            $ticket = Ticket::whereHas('sirkulir')->get();
+        }elseif($currentRoute == 'list-done'){
+            $ticket = Ticket::whereHas('documentDone')->get();
+        }elseif($currentRoute == 'list-done-signed'){
+            $ticket = Ticket::whereHas('doneSigned')->get();
+        }
+
+        return view('sirkulir.list_ticket', compact('ticket'));
+    }
+
+    public function uploadFile(Request $request, $document_id){
+        $document = Document::findOrFail($document_id);
+        $document->DocumentStatus = '8';
+        $document->save();
+
+        $request->validate([
+            'file' => 'required|mimes:pdf',
+        ]);
+
+        $files = new File();
+        $files->DocumentID = $document->DocumentID;
+        $files->Flag_status = 'S';
+        $file = $request->file('file');
+        $filename = 'Dokumen'. $document->id.'.pdf';
+        $path = $file->storeAs('uploads', $filename, 'public');
+        $files->DocumentPath = $path;
+        $files->save();
+
+        $log = new LogDocument();
+        $log->DocumentID = $document->DocumentID;
+        $log->LogDesc = 'Evidence Telah Disubmit';
+        $log->status = $document->status->status;
+        $log->UpdatedBy = Auth::user()->name;
+        $log->save();
+
+        Alert::success('Berhasil!', 'Berhasil Upload File');
+        return redirect()->back();
+    }
+
+    public function acceptFile(Request $request, $document_id){
+        $document = Document::findOrFail($document_id);
+        $document->DocumentStatus = '9';
+        $document->save();
+
+        $log = new LogDocument();
+        $log->DocumentID = $document->DocumentID;
+        $log->LogDesc = $request->komentar;
+        $log->status = $document->status->status;
+        $log->UpdatedBy = Auth::user()->name;
+        $log->save();
+
+        Alert::success('Berhasil!', 'Dokumen Telah DIverifikasi');
+        return redirect()->back();
+    }
+
+    public function rejectFile(Request $request, $document_id){
+        $document = Document::findOrFail($document_id);
+        $document->DocumentStatus = '10';
+        $document->save();
+
+        $log = new LogDocument();
+        $log->DocumentID = $document->DocumentID;
+        $log->LogDesc = $request->komentar;
+        $log->status = $document->status->status;
+        $log->UpdatedBy = Auth::user()->name;
+        $log->save();
+
+        Alert::success('Berhasil!', 'Dokumen Telah Dikembalikan ke Mitra');
+        return redirect()->back();
+    }
+
+    public function dropDokumen($document_id){
+        $document = Document::findOrFail($document_id);
+        $document->delete();
+
+        Alert::success('Berhasil!', 'Berhasil Hapus Dokumen');
+        return redirect()->back();
+    }
+
+    public function returnDokumen(Request $request, $document_id){
+        $document = Document::findOrFail($document_id);
+
+        Alert::success('Berhasil!', 'Berhasil Return Dokumen');
+        return redirect()->back();
     }
 }

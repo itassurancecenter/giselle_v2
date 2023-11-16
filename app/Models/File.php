@@ -5,14 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class LogDocument extends Model
+class File extends Model
 {
     use HasFactory;
-    protected $table = 'log_document';
+    protected $table = 'file';
 
     public function document(){
         return $this->belongsTo(Document::class, 'DocumentID', 'DocumentID');
     }
-
-
 }

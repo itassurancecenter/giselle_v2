@@ -29,7 +29,7 @@
       </li>
       <li class="nav-header"><strong>DAFTAR DOKUMEN SELESAI</strong></li>
       <li class="nav-item">
-        <a href="{{ url('/') }}" class="nav-link">
+        <a href="{{ url('/list-done-signed') }}" class="nav-link">
             <i class="nav-icon fas fa-tasks"></i>
             <p>
             Selesai Proses TTD
@@ -37,10 +37,10 @@
         </a>
       </li>
       <li class="nav-item">
-        <a href="{{ url('/') }}" class="nav-link">
+        <a href="{{ url('/list-done') }}" class="nav-link">
             <i class="nav-icon fas fa-clipboard-check"></i>
             <p>
-            Diambil Mitra
+            Dokumen Selesai
             </p>
         </a>
       </li>
