@@ -1,6 +1,12 @@
 @extends('layout.main')
 @section('judul')
-List Dokumen Sirkulir
+@if (Route::current()->getName() == 'list-done')
+    Dokumen Selesai Proses
+@elseif(Route::current()->getName() == 'list-done-signed')
+    Dokumen Selesai Sirkulir
+@else
+    Dokumen Proses Sirkulir
+@endif
 @endsection
 
 @section('content')

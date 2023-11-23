@@ -12,29 +12,36 @@ Data Mitra
             </div>
             <!-- /.card-header -->
             <div class="card-body">
-                {{-- <livewire:master-mitra> --}}
-                <table id="example1" class="table table-responsive table-bordered table-striped">
-                    <thead>
-                        <tr>
-                            <th style="width: 5%;">ID Mitra</th>
-                            <th style="width: 55%;">Nama Mitra</th>
-                            <th style="width: 30%;">Ditambahkan</th>
-                            <th style="width: 10%;">Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($data_mitra as $dm)
-                        <tr>
-                            <td>{{ $dm->id_partner }}</td>
-                            <td>{{ $dm->partner_name }}</td>
-                            <td>{{ date('d F Y', strtotime($dm->last_update)) }}</td>
-                            <td>
-                                <a href="#" class="btn btn-success btn-md">Edit</a>
-                            </td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+                <div class="row">
+                    <div class="col-sm-12 col-md-6">
+                        <div class="dt-buttons btn-group flex-wrap"> <button
+                                class="btn btn-secondary buttons-copy buttons-html5" tabindex="0"
+                                aria-controls="example1" type="button"><span>Copy</span></button> <button
+                                class="btn btn-secondary buttons-csv buttons-html5" tabindex="0"
+                                aria-controls="example1" type="button"><span>CSV</span></button> <button
+                                class="btn btn-secondary buttons-excel buttons-html5" tabindex="0"
+                                aria-controls="example1" type="button"><span>Excel</span></button> <button
+                                class="btn btn-secondary buttons-pdf buttons-html5" tabindex="0"
+                                aria-controls="example1" type="button"><span>PDF</span></button> <button
+                                class="btn btn-secondary buttons-print" tabindex="0" aria-controls="example1"
+                                type="button"><span>Print</span></button>
+                            <div class="btn-group"><button
+                                    class="btn btn-secondary buttons-collection dropdown-toggle buttons-colvis"
+                                    tabindex="0" aria-controls="example1" type="button"
+                                    aria-haspopup="true"><span>Column visibility</span><span
+                                        class="dt-down-arrow"></span></button></div>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-6">
+                        <div id="example1_filter" class="float-right">
+                            <label>Search:<input type="text" wire:model="search" aria-label="search"
+                                    class="form-control form-control-sm" placeholder="Cari Data"
+                                    aria-controls="example1"></label>
+                        </div>
+                    </div>
+                </div>
+                <livewire:master-mitra>
+
             </div>
             <!-- /.card-body -->
         </div>
@@ -42,5 +49,6 @@ Data Mitra
     </div>
     <!-- /.col -->
 </div>
+
 @livewireScripts()
 @endsection

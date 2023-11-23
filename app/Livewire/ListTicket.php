@@ -16,6 +16,8 @@ class ListTicket extends Component
 
     public function render()
     {
+        $data_tiket = Ticket::all();
+
         $currentRoute = Route::currentRouteName();
         // dd($currentRoute);
         if($currentRoute == 'list.sirkulir'){

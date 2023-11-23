@@ -1,6 +1,6 @@
 <div class="row mt-3">
     <div class="col-12">
-        <table class="table table-bordered table-striped">
+        <table id="example1" class="table table-bordered table-striped">
             <thead>
             <tr>
               <th>Nomor Tiket</th>
@@ -24,7 +24,7 @@
                         <div class="progress progress-sm">
                             @if ($t->document->count() !== 0)
                             <div class="progress-bar progress-bar-danger" style="width: {{ $t->documentDone->count()/$t->document->count()*100 }}%" aria-valuenow="{{ $t->documentDone->count()/$t->document->count()*100 }}%" aria-valuemin="0" aria-valuemax="100">
-                                {{ $t->documentDone->count()/$t->document->count()*100 }} %
+                                {{ round($t->documentDone->count()/$t->document->count()*100, 2) }} %
                             </div>
                             @else
                             <div class="progress-bar progress-bar-danger" style="width: 0%" aria-valuenow="0%" aria-valuemin="0" aria-valuemax="100">
@@ -35,9 +35,11 @@
                     </td>
                     <td>
                         <a href="{{ route('detail-tiket', $t->TicketID) }}" class="btn btn-info btn-sm btn-block">Detail Tiket</a>
+                        @if(Route::current()->getName() != 'list-done')
                         <a href="#" class="btn btn-primary btn-sm btn-block" data-toggle="modal"
                         data-target="#update-{{ $t->TicketID }}"">Update</a>
-                        <a href="#" class="btn btn-secondary btn-sm btn-block">Update Semua</a>
+                        @endif
+                        {{-- <a href="#" class="btn btn-secondary btn-sm btn-block">Update Semua</a> --}}
                         <form action="{{ route('bulk-update-status') }}" method="post" enctype="multipart/form-data">
                             @csrf
                             <div class="modal fade" id="update-{{ $t->TicketID }}">
@@ -50,11 +52,8 @@
                                             </button>
                                         </div>
                                         <div class="modal-body">
-                                            <div class="float-sm-right">
+                                            <table id="example2" class="table table-bordered table-striped">
                                                 <button type="submit" class="btn btn-md btn-info mb-2">Update Status</button>
-                                            </div>
-
-                                            <table class="table table-bordered table-striped">
                                                 <thead>
                                                     <tr>
                                                         <th><input type="checkbox" id="select-all-document"></th>
@@ -105,9 +104,6 @@
                 @endforeach
             </tbody>
           </table>
-
-            {{ $ticket->links() }}
-
     </div>
 </div>
 <script>

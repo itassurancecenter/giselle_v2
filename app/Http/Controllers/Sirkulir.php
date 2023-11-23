@@ -151,27 +151,69 @@ class Sirkulir extends Controller
     {
         $document = Document::findOrFail($document_id);
         $status = $document->DocumentStatus;
-        $max = '9';
+        $max = '15';
+        $specialValue1 = '1';
+        $specialValue2 = '6';
+        $specialValue3 = '9';
+        $valueTakeOut = '17';
+
+
         if($document->SignBy == '10'){
             $maxValue = '7';
-            $specialValue = '1';
+            $valueTerima = '5';
+            $valueReview = '18';
 
-            if($status == $specialValue){
-                $document->DocumentStatus = $status + 2;
-            }elseif($status == $maxValue || $status == $max){
-                $document->DocumentStatus = $status + 0;
+            if($document->DocumentType == 'BAK-BAPL' || $document->DocumentType == 'BAK-BAPLA'){
+                if($status == $specialValue1){
+                    $document->DocumentStatus = $status + 2;
+                }elseif($status == $maxValue || $status == $max || $status == $valueTakeOut){
+                    $document->DocumentStatus = $status + 0;
+                }elseif($status == $valueTerima){
+                    $document->DocumentStatus = $valueReview;
+                }elseif($status == $valueReview){
+                    $document->DocumentStatus = $specialValue2;
+                }else{
+                    $document->DocumentStatus = $status + 1;
+                }
             }else{
-                $document->DocumentStatus = $status + 1;
+                if($status == $specialValue1){
+                    $document->DocumentStatus = $status + 2;
+                }elseif($status == $maxValue || $status == $max || $status == $valueTakeOut){
+                    $document->DocumentStatus = $status + 0;
+                }else{
+                    $document->DocumentStatus = $status + 1;
+                }
             }
         }elseif($document->SignBy == '20'){
             $maxValue = '2';
 
-            if($status == $maxValue || $status == $max){
+            if($status == $maxValue || $status == $max || $status == $valueTakeOut){
+                $document->DocumentStatus = $status + 0;
+            }else{
+                $document->DocumentStatus = $status + 1;
+            }
+        }elseif($document->SignBy == '30'){
+            $maxValue = '10';
+
+            if($status == $specialValue1 || $status == $specialValue2){
+                $document->DocumentStatus = $status + 2;
+            }elseif($status == $maxValue || $status == $max || $status == $valueTakeOut){
+                $document->DocumentStatus = $status + 0;
+            }else{
+                $document->DocumentStatus = $status + 1;
+            }
+        }elseif($document->SignBy == '40'){
+            $maxValue = '13';
+
+            if($status == $specialValue1 || $status == $specialValue2 || $status == $specialValue3){
+                $document->DocumentStatus = $status + 2;
+            }elseif($status == $maxValue || $status == $max || $status == $valueTakeOut){
                 $document->DocumentStatus = $status + 0;
             }else{
                 $document->DocumentStatus = $status + 1;
             }
         }
+        // dd($document);
         $document->save();
 
         $log = new LogDocument();
@@ -189,42 +231,89 @@ class Sirkulir extends Controller
         $selected_document = $request->input('selected_document', []);
         $jml = sizeof($selected_document);
 
-        foreach($selected_document as $id){
-            $document = Document::find($id);
-            $status = $document->DocumentStatus;
-            $max = '9';
-            if($document->SignBy == '10'){
-                $maxValue = '7';
-                $specialValue = '1';
+        if($jml == 0){
+            Alert::error('Gagal!', 'Pilih Dokumen Terlebih Dahulu');
+            return redirect()->back();
+        }else{
+            foreach($selected_document as $id){
+                $document = Document::findOrFail($id);
+                $status = $document->DocumentStatus;
+                $max = '15';
+                $specialValue1 = '1';
+                $specialValue2 = '6';
+                $specialValue3 = '9';
+                $valueTakeOut = '17';
 
-                if($status == $specialValue){
-                    $document->DocumentStatus = $status + 2;
-                }elseif($status == $maxValue || $status == $max){
-                    $document->DocumentStatus = $status + 0;
-                }else{
-                    $document->DocumentStatus = $status + 1;
-                }
-            }elseif($document->SignBy == '20'){
-                $maxValue = '2';
 
-                if($status == $maxValue || $status == $max){
-                    $document->DocumentStatus = $status + 0;
-                }else{
-                    $document->DocumentStatus = $status + 1;
+                if($document->SignBy == '10'){
+                    $maxValue = '7';
+                    $valueTerima = '5';
+                    $valueReview = '18';
+
+                    if($document->DocumentType == 'BAK-BAPL' || $document->DocumentType == 'BAK-BAPLA'){
+                        if($status == $specialValue1){
+                            $document->DocumentStatus = $status + 2;
+                        }elseif($status == $maxValue || $status == $max || $status == $valueTakeOut){
+                            $document->DocumentStatus = $status + 0;
+                        }elseif($status == $valueTerima){
+                            $document->DocumentStatus = $valueReview;
+                        }elseif($status == $valueReview){
+                            $document->DocumentStatus = $specialValue2;
+                        }else{
+                            $document->DocumentStatus = $status + 1;
+                        }
+                    }else{
+                        if($status == $specialValue1){
+                            $document->DocumentStatus = $status + 2;
+                        }elseif($status == $maxValue || $status == $max || $status == $valueTakeOut){
+                            $document->DocumentStatus = $status + 0;
+                        }else{
+                            $document->DocumentStatus = $status + 1;
+                        }
+                    }
+                }elseif($document->SignBy == '20'){
+                    $maxValue = '2';
+
+                    if($status == $maxValue || $status == $max || $status == $valueTakeOut){
+                        $document->DocumentStatus = $status + 0;
+                    }else{
+                        $document->DocumentStatus = $status + 1;
+                    }
+                }elseif($document->SignBy == '30'){
+                    $maxValue = '10';
+
+                    if($status == $specialValue1 || $status == $specialValue2){
+                        $document->DocumentStatus = $status + 2;
+                    }elseif($status == $maxValue || $status == $max || $status == $valueTakeOut){
+                        $document->DocumentStatus = $status + 0;
+                    }else{
+                        $document->DocumentStatus = $status + 1;
+                    }
+                }elseif($document->SignBy == '40'){
+                    $maxValue = '13';
+
+                    if($status == $specialValue1 || $status == $specialValue2 || $status == $specialValue3){
+                        $document->DocumentStatus = $status + 2;
+                    }elseif($status == $maxValue || $status == $max || $status == $valueTakeOut){
+                        $document->DocumentStatus = $status + 0;
+                    }else{
+                        $document->DocumentStatus = $status + 1;
+                    }
                 }
+                // dd($document);
+                $document->save();
+
+                $log = new LogDocument();
+                $log->DocumentID = $document->DocumentID;
+                $log->LogDesc = 'Dokumen Telah Diupdate '. $document->status->status;
+                $log->status = $document->status->status;
+                $log->UpdatedBy = Auth::user()->name;
+                $log->save();
             }
-            $document->save();
 
-            $log = new LogDocument();
-            $log->DocumentID = $document->DocumentID;
-            $log->LogDesc = 'Dokumen Telah Diupdate '. $document->status->status;
-            $log->status = $document->status->status;
-            $log->UpdatedBy = Auth::user()->name;
-            $log->save();
+            Alert::success('Berhasil!', $jml.' Status Dokumen Berhasil Diupdate');
+            return redirect()->back();
         }
-
-        Alert::success('Berhasil!', $jml.' Status Dokumen Berhasil Diupdate');
-        return redirect()->back();
     }
 
     public function listSirkulir(){
@@ -244,8 +333,7 @@ class Sirkulir extends Controller
 
     public function uploadFile(Request $request, $document_id){
         $document = Document::findOrFail($document_id);
-        $document->DocumentStatus = '8';
-        $document->save();
+        $document->DocumentStatus = '14';
 
         $request->validate([
             'file' => 'required|mimes:pdf',
@@ -258,13 +346,15 @@ class Sirkulir extends Controller
         $filename = 'Dokumen'. $document->id.'.pdf';
         $path = $file->storeAs('uploads', $filename, 'public');
         $files->DocumentPath = $path;
-        $files->save();
 
         $log = new LogDocument();
         $log->DocumentID = $document->DocumentID;
         $log->LogDesc = 'Evidence Telah Disubmit';
         $log->status = $document->status->status;
         $log->UpdatedBy = Auth::user()->name;
+
+        $document->save();
+        $files->save();
         $log->save();
 
         Alert::success('Berhasil!', 'Berhasil Upload File');
@@ -273,7 +363,7 @@ class Sirkulir extends Controller
 
     public function acceptFile(Request $request, $document_id){
         $document = Document::findOrFail($document_id);
-        $document->DocumentStatus = '9';
+        $document->DocumentStatus = '15';
         $document->save();
 
         $log = new LogDocument();
@@ -289,7 +379,7 @@ class Sirkulir extends Controller
 
     public function rejectFile(Request $request, $document_id){
         $document = Document::findOrFail($document_id);
-        $document->DocumentStatus = '10';
+        $document->DocumentStatus = '16';
         $document->save();
 
         $log = new LogDocument();
@@ -315,6 +405,24 @@ class Sirkulir extends Controller
         $document = Document::findOrFail($document_id);
 
         Alert::success('Berhasil!', 'Berhasil Return Dokumen');
+        return redirect()->back();
+    }
+
+    public function takeOutDokumen(Request $request, $document_id){
+        $document = Document::findOrFail($document_id);
+        $document->PicPickup = $request->pic;
+        $document->DocumentStatus = '17';
+
+        $log = new LogDocument();
+        $log->DocumentID = $document->DocumentID;
+        $log->LogDesc = "Dokumen Telah Diambil Oleh ".$request->pic;
+        $log->status = $document->status->status;
+        $log->UpdatedBy = Auth::user()->name;
+        // dd($log);
+        $document->save();
+        $log->save();
+
+        Alert::success('Berhasil!', 'Dokumen Telah Dikembalikan ke Mitra');
         return redirect()->back();
     }
 }

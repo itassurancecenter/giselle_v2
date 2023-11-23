@@ -22,11 +22,11 @@ class Ticket extends Model
     }
 
     public function documentDone(){
-        return $this->hasMany(Document::class, 'TicketID', 'TicketID')->where('DocumentStatus', '9');
+        return $this->hasMany(Document::class, 'TicketID', 'TicketID')->where('DocumentStatus', '15');
     }
 
     public function doneSigned(){
-        return $this->hasMany(Document::class, 'TicketID', 'TicketID')->whereIn('DocumentStatus', ['2', '7']);
+        return $this->hasMany(Document::class, 'TicketID', 'TicketID')->whereIn('DocumentStatus', ['2', '7', '10', '13']);
     }
 
     public function sirkulir(){

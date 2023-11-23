@@ -53,7 +53,7 @@ Detail Tiket {{ $ticket->TicketID }}
                             </div>
                             <div class="modal fade" id="modal-doc">
                                 <div class="modal-dialog modal-lg">
-                                    <form action="{{ route('store-dokumen', $id_ticket) }}" action="POST" enctype="multipart/form-data">
+                                    <form action="{{ route('store-dokumen', $id_ticket) }}" action="GET" enctype="multipart/form-data">
                                         @csrf
                                         <div class="modal-content">
                                             <div class="modal-header">

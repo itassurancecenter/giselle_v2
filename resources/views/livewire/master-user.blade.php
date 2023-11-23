@@ -1,8 +1,7 @@
 <div>
-    <table class="table table-bordered table-striped">
+    <table id="example1" class="table table-bordered table-striped">
         <thead>
         <tr>
-          <th style="width: 5%;">No</th>
           <th>Nama</th>
           <th>Username</th>
           <th>Role</th>
@@ -13,7 +12,6 @@
         <tbody>
             @foreach ($data_user as $du)
                 <tr>
-                    <td>{{ $du->iduser }}</td>
                     <td>{{ $du->name }}</td>
                     <td>{{ $du->username }}</td>
                     @if ($du->role == 1)
@@ -45,18 +43,5 @@
             @endforeach
 
         </tbody>
-        <tfoot>
-        <tr>
-            <th style="width: 5%;">No</th>
-            <th>Nama</th>
-            <th>Username</th>
-            <th>Role</th>
-            <th>Nama Mitra</th>
-            <th>Aksi</th>
-        </tr>
-        </tfoot>
       </table>
-      <div class="float-right">
-        {{ $data_user->links() }}
-      </div>
 </div>
